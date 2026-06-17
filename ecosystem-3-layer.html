@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ClassRoots — 3-layer product ecosystem</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --ink-faint: #94a3b8;
+
+    --l3-bg: #eff6ff;
+    --l3-border: #93c5fd;
+    --l3-accent: #1d4ed8;
+
+    --l2-bg: #faf5ff;
+    --l2-border: #c4b5fd;
+    --l2-accent: #6d28d9;
+
+    --l1-bg: #fff7ed;
+    --l1-border: #fdba74;
+    --l1-accent: #c2410c;
+
+    --gray-bg: #f8fafc;
+    --gray-border: #cbd5e1;
+    --gray-accent: #475569;
+
+    --arrow: #94a3b8;
+    --arrow-strong: #475569;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 24px 40px;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin: 0 0 32px;
+  }
+
+  .layer {
+    border-radius: 14px;
+    padding: 18px 20px 22px;
+    border: 1.5px solid;
+    position: relative;
+  }
+  .layer + .layer { margin-top: 14px; }
+
+  .layer-3 { background: var(--l3-bg); border-color: var(--l3-border); }
+  .layer-2 { background: var(--l2-bg); border-color: var(--l2-border); }
+  .layer-1 { background: var(--l1-bg); border-color: var(--l1-border); }
+
+  .layer-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .layer-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: white;
+  }
+  .layer-3 .layer-tag { background: var(--l3-accent); }
+  .layer-2 .layer-tag { background: var(--l2-accent); }
+  .layer-1 .layer-tag { background: var(--l1-accent); }
+
+  .layer-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+  }
+  .layer-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+
+  .boxes {
+    display: grid;
+    gap: 10px;
+  }
+
+  /* Layer 3: 5 surfaces */
+  .layer-3 .boxes {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  /* Layer 2: 2 graphs */
+  .layer-2 .boxes {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* Layer 1: 3 stages + arrows */
+  .layer-1 .pipeline {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .layer-1 .arrow {
+    align-self: center;
+    color: var(--l1-accent);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .box {
+    background: white;
+    border-radius: 10px;
+    padding: 12px 12px 14px;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  .layer-3 .box { border-color: rgba(29, 78, 216, 0.18); }
+  .layer-2 .box { border-color: rgba(109, 40, 217, 0.18); }
+  .layer-1 .box { border-color: rgba(194, 65, 12, 0.18); }
+
+  .box.parked {
+    background: var(--gray-bg);
+    border-color: var(--gray-border) !important;
+    border-style: dashed;
+    color: var(--ink-soft);
+  }
+
+  .box-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .box.parked .box-title { color: var(--ink-soft); }
+  .box-desc {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .box-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--ink-soft);
+    align-self: flex-start;
+  }
+  .box-tag.ai { background: rgba(29, 78, 216, 0.12); color: var(--l3-accent); }
+  .box-tag.offline { background: rgba(194, 65, 12, 0.12); color: var(--l1-accent); }
+
+  /* Connector arrows between layers */
+  .between {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 6px 0;
+    color: var(--arrow);
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .between .label {
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .between svg { display: block; margin: 0 auto; }
+
+  /* Footer key */
+  .key {
+    margin-top: 22px;
+    padding: 12px 14px;
+    background: var(--gray-bg);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .key b { color: var(--ink); font-weight: 600; }
+  .key .dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .dot-ai { background: var(--l3-accent); }
+  .dot-offline { background: var(--l1-accent); }
+
+  .stamp {
+    margin-top: 14px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Product ecosystem — 3-layer architecture</h1>
+<p class="subtitle">Two products on the surface layer sharing one content backbone, addressed by a Universal Knowledge Graph.</p>
+
+<!-- LAYER 3: Surfaces -->
+<div class="layer layer-3">
+  <div class="layer-head">
+    <span class="layer-tag">Layer 3</span>
+    <h2 class="layer-title">Surfaces</h2>
+    <span class="layer-sub">what end users see</span>
+  </div>
+  <div class="boxes">
+    <div class="box">
+      <div class="box-title">🎓 Byjus.AI</div>
+      <div class="box-desc">AI tutor, voice-first, MAX + Spark. India B2C + Indonesia Pillar 2 (Bahasa).</div>
+      <span class="box-tag ai">AI path</span>
+    </div>
+    <div class="box">
+      <div class="box-title">📱 Parent App</div>
+      <div class="box-desc">Companion to Byjus.AI. India B2C only.</div>
+      <span class="box-tag ai">AI path</span>
+    </div>
+    <div class="box">
+      <div class="box-title">📺 Byju's TV</div>
+      <div class="box-desc">Offline classroom TV. Teacher-driven. CERDAS Pillar 1.</div>
+      <span class="box-tag offline">Offline path</span>
+    </div>
+    <div class="box">
+      <div class="box-title">📱 Teach Buddy</div>
+      <div class="box-desc">Teacher mobile companion to Byju's TV. Same product line.</div>
+      <span class="box-tag offline">Offline path</span>
+    </div>
+    <div class="box parked">
+      <div class="box-title">👨‍🏫 Teacher Enablement</div>
+      <div class="box-desc">Human capacity layer. CERDAS Pillar 3. Own track — parked.</div>
+      <span class="box-tag">Parked</span>
+    </div>
+  </div>
+</div>
+
+<!-- Connector: Layer 3 → Layer 2 -->
+<div class="between">
+  <svg width="40" height="22" viewBox="0 0 40 22">
+    <path d="M20 0 L20 16 M14 10 L20 16 L26 10" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="label">AI surfaces read the Student KG (offline surfaces skip Layer 2 at runtime)</div>
+</div>
+
+<!-- LAYER 2: Universal Knowledge Graph -->
+<div class="layer layer-2">
+  <div class="layer-head">
+    <span class="layer-tag">Layer 2</span>
+    <h2 class="layer-title">Universal Knowledge Graph</h2>
+    <span class="layer-sub">tagging substrate + runtime traversal (AI path)</span>
+  </div>
+  <div class="boxes">
+    <div class="box">
+      <div class="box-title">🎒 Student KG</div>
+      <div class="box-desc">Per-student overlay. Known vs unknown islands. Bounded by the student's textbook.</div>
+    </div>
+    <div class="box">
+      <div class="box-title">📚 Universal KG (UKG)</div>
+      <div class="box-desc">Tags every piece of content. Runtime traversal engine for the AI path.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Connector: Layer 2 → Layer 1 -->
+<div class="between">
+  <svg width="40" height="22" viewBox="0 0 40 22">
+    <path d="M20 0 L20 16 M14 10 L20 16 L26 10" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="label">UKG references content in the CMS</div>
+</div>
+
+<!-- LAYER 1: Content -->
+<div class="layer layer-1">
+  <div class="layer-head">
+    <span class="layer-tag">Layer 1</span>
+    <h2 class="layer-title">Content</h2>
+    <span class="layer-sub">production · store · distribution</span>
+  </div>
+  <div class="pipeline">
+    <div class="box">
+      <div class="box-title">🏭 Production Pipeline</div>
+      <div class="box-desc">teams.classroots.edu + Content Tool. Producing Grades 1–9 Math.</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box">
+      <div class="box-title">📦 Common CMS</div>
+      <div class="box-desc">SCHOOL-APP-CMS today. India + Indonesia mapped independently.</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box">
+      <div class="box-title">📤 Export Service</div>
+      <div class="box-desc">Online → offline bundles for Byju's TV + Teach Buddy. Online read path for Byjus.AI: TBD.</div>
+    </div>
+  </div>
+</div>
+
+<div class="key">
+  <span><span class="dot dot-ai"></span><b>AI / online path</b> — Byjus.AI · Parent App. Traverses the UKG at runtime.</span>
+  <span><span class="dot dot-offline"></span><b>Offline curated path</b> — Byju's TV · Teach Buddy. Skips Layer 2 at runtime; gets offline bundles from the Export Service.</span>
+</div>
+
+<div class="stamp">Source: <a href="https://github.com/VinayRavindra-CR/classroots-diagrams" style="color: inherit;">github.com/VinayRavindra-CR/classroots-diagrams</a></div>
+
+</div>
+</body>
+</html>
