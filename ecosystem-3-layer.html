@@ -98,99 +98,90 @@
     gap: 10px;
   }
 
-  /* Layer 3: Venn — India B2C and Indonesia B2G overlap on Student App */
+  /* Layer 3: Venn — anchored to grid columns. Region1 | gap | Region2 | gap | Region3 */
   .layer-3 .venn {
+    display: grid;
+    grid-template-columns: 1fr 22px 1fr 22px 1.9fr;
+    grid-template-rows: 1fr;
+    column-gap: 0;
+    padding: 32px 0 8px;
+    min-height: 200px;
     position: relative;
-    padding: 28px 0 8px;
-    min-height: 220px;
   }
-  /* Product-line outlines (rounded rectangles) */
+  /* Product-line outlines anchored to grid columns */
   .product-line {
-    position: absolute;
-    top: 12px; bottom: 12px;
-    border: 2.5px solid;
+    grid-row: 1;
+    align-self: stretch;
     border-radius: 28px;
-    pointer-events: none;
+    border: 2.5px solid;
+    position: relative;
   }
   .product-line.india {
-    left: 0;
-    right: 39%;
-    background: rgba(29, 78, 216, 0.08);
-    border-color: rgba(29, 78, 216, 0.55);
+    grid-column: 1 / 4;          /* region1 + gap + region2 */
+    background: rgba(29, 78, 216, 0.09);
+    border-color: rgba(29, 78, 216, 0.6);
     z-index: 1;
   }
   .product-line.indonesia {
-    left: 31%;
-    right: 0;
-    background: rgba(13, 148, 136, 0.09);
-    border-color: rgba(13, 148, 136, 0.6);
+    grid-column: 3 / 6;          /* region2 + gap + region3 */
+    background: rgba(13, 148, 136, 0.10);
+    border-color: rgba(13, 148, 136, 0.65);
     z-index: 1;
   }
-  /* Subtle deeper shade in the intersection (shared zone) */
-  .shared-bg {
-    position: absolute;
-    top: 12px; bottom: 12px;
-    left: 31%;
-    right: 39%;
-    background: rgba(99, 102, 241, 0.08);
-    z-index: 0;
-    pointer-events: none;
-  }
+  /* Region labels — pills inside their product-line rectangles */
   .product-line .pl-label {
     position: absolute;
     top: -13px;
     background: white;
-    padding: 3px 13px;
+    padding: 3px 14px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    z-index: 3;
   }
   .product-line.india .pl-label {
     left: 22px;
     color: rgba(29, 78, 216, 1);
-    border: 1.5px solid rgba(29, 78, 216, 0.55);
+    border: 1.5px solid rgba(29, 78, 216, 0.6);
   }
   .product-line.indonesia .pl-label {
     right: 22px;
     color: rgba(13, 148, 136, 1);
-    border: 1.5px solid rgba(13, 148, 136, 0.6);
+    border: 1.5px solid rgba(13, 148, 136, 0.65);
   }
-
-  /* Three-region card grid */
-  .venn-grid {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
-    gap: 28px;
-    padding: 32px 28px 30px;
-  }
+  /* Card cells anchored to grid columns */
   .venn-cell {
-    display: grid;
-    align-items: center;
+    grid-row: 1;
+    align-self: center;
+    z-index: 2;
+    display: flex;
     gap: 14px;
+    padding: 20px 18px;
   }
-  .venn-cell.right {
-    grid-template-columns: 1fr 1fr;
-  }
+  .venn-cell.india-only    { grid-column: 1; }
+  .venn-cell.shared        { grid-column: 3; }
+  .venn-cell.indonesia-only{ grid-column: 5; }
 
-  /* Big surface cards — names only */
+  /* Surface cards */
   .surface-card {
-    padding: 18px 18px;
+    flex: 1;
+    padding: 16px 16px;
     text-align: left;
     align-items: flex-start;
-    width: 100%;
     border-radius: 12px;
     background: white;
     border: 1.5px solid rgba(15, 23, 42, 0.1);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
   .surface-card .box-title { font-size: 16px; font-weight: 700; }
   .surface-card.shared {
-    border: 1.5px solid rgba(99, 102, 241, 0.55);
-    background: linear-gradient(135deg, rgba(255,255,255,1), rgba(238, 242, 255, 0.6));
+    border: 2px solid rgba(99, 102, 241, 0.65);
+    background: linear-gradient(135deg, #ffffff, #eef2ff);
   }
   .box-tag.shared { background: rgba(99, 102, 241, 0.18); color: #4338ca; }
   /* Layer 2: 2 graphs */
@@ -326,7 +317,7 @@
   </div>
 
   <div class="venn">
-    <div class="shared-bg"></div>
+    <!-- Product-line outlines anchored to grid columns -->
     <div class="product-line india">
       <span class="pl-label">India B2C</span>
     </div>
@@ -334,30 +325,28 @@
       <span class="pl-label">Indonesia B2G (CERDAS)</span>
     </div>
 
-    <div class="venn-grid">
-      <!-- Region 1: India only -->
-      <div class="venn-cell">
-        <div class="surface-card">
-          <div class="box-title">📱 Parent App</div>
-        </div>
+    <!-- Region 1: India only -->
+    <div class="venn-cell india-only">
+      <div class="surface-card">
+        <div class="box-title">📱 Parent App</div>
       </div>
+    </div>
 
-      <!-- Region 2: Shared (intersection) -->
-      <div class="venn-cell center">
-        <div class="surface-card shared">
-          <div class="box-title">🎓 Student App</div>
-          <span class="box-tag shared">Shared</span>
-        </div>
+    <!-- Region 2: Shared intersection -->
+    <div class="venn-cell shared">
+      <div class="surface-card shared">
+        <div class="box-title">🎓 Student App</div>
+        <span class="box-tag shared">Shared</span>
       </div>
+    </div>
 
-      <!-- Region 3: Indonesia only -->
-      <div class="venn-cell right">
-        <div class="surface-card">
-          <div class="box-title">📺 Byju's TV</div>
-        </div>
-        <div class="surface-card">
-          <div class="box-title">📱 Teacher Portal</div>
-        </div>
+    <!-- Region 3: Indonesia only -->
+    <div class="venn-cell indonesia-only">
+      <div class="surface-card">
+        <div class="box-title">📺 Byju's TV</div>
+      </div>
+      <div class="surface-card">
+        <div class="box-title">📱 Teacher Portal</div>
       </div>
     </div>
   </div>
