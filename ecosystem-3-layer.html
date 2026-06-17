@@ -101,93 +101,98 @@
   /* Layer 3: Venn — India B2C and Indonesia B2G overlap on Student App */
   .layer-3 .venn {
     position: relative;
-    padding: 26px 0 12px;
+    padding: 28px 0 8px;
+    min-height: 220px;
   }
-  /* Two overlapping rounded-rectangle "product line" backgrounds */
+  /* Product-line outlines (rounded rectangles) */
   .product-line {
     position: absolute;
-    top: 0; bottom: 0;
-    border: 2px solid;
-    border-radius: 22px;
+    top: 12px; bottom: 12px;
+    border: 2.5px solid;
+    border-radius: 28px;
     pointer-events: none;
   }
   .product-line.india {
     left: 0;
-    right: 36%;
-    background: rgba(29, 78, 216, 0.06);
-    border-color: rgba(29, 78, 216, 0.45);
+    right: 39%;
+    background: rgba(29, 78, 216, 0.08);
+    border-color: rgba(29, 78, 216, 0.55);
     z-index: 1;
   }
   .product-line.indonesia {
-    left: 26%;
+    left: 31%;
     right: 0;
-    background: rgba(13, 148, 136, 0.07);
-    border-color: rgba(13, 148, 136, 0.55);
+    background: rgba(13, 148, 136, 0.09);
+    border-color: rgba(13, 148, 136, 0.6);
     z-index: 1;
+  }
+  /* Subtle deeper shade in the intersection (shared zone) */
+  .shared-bg {
+    position: absolute;
+    top: 12px; bottom: 12px;
+    left: 31%;
+    right: 39%;
+    background: rgba(99, 102, 241, 0.08);
+    z-index: 0;
+    pointer-events: none;
   }
   .product-line .pl-label {
     position: absolute;
-    top: -11px;
+    top: -13px;
     background: white;
-    padding: 2px 12px;
+    padding: 3px 13px;
     border-radius: 999px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
   .product-line.india .pl-label {
-    left: 18px;
+    left: 22px;
     color: rgba(29, 78, 216, 1);
-    border: 1.5px solid rgba(29, 78, 216, 0.45);
+    border: 1.5px solid rgba(29, 78, 216, 0.55);
   }
   .product-line.indonesia .pl-label {
-    right: 18px;
+    right: 22px;
     color: rgba(13, 148, 136, 1);
-    border: 1.5px solid rgba(13, 148, 136, 0.55);
+    border: 1.5px solid rgba(13, 148, 136, 0.6);
   }
 
-  /* Card row — three zones */
+  /* Three-region card grid */
   .venn-grid {
     position: relative;
     z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr 2fr;
-    gap: 22px;
-    padding: 30px 30px 24px;
+    gap: 28px;
+    padding: 32px 28px 30px;
   }
   .venn-cell {
     display: grid;
-    grid-auto-rows: 1fr;
-    gap: 10px;
+    align-items: center;
+    gap: 14px;
   }
   .venn-cell.right {
     grid-template-columns: 1fr 1fr;
   }
-  .venn-cell.center .box {
-    border: 1.5px solid;
-    border-image: linear-gradient(135deg, rgba(29, 78, 216, 0.5), rgba(13, 148, 136, 0.55)) 1;
-    border-radius: 0;
-    background: linear-gradient(135deg, rgba(29, 78, 216, 0.03), rgba(13, 148, 136, 0.04));
-  }
-  .venn-cell.center .box {
-    border-radius: 10px;
-    border: 1.5px solid rgba(99, 102, 241, 0.6);
-  }
-  .box-tag.shared { background: rgba(99, 102, 241, 0.14); color: #4338ca; }
-  .box-tag.indonesia { background: rgba(13, 148, 136, 0.14); color: #0f766e; }
 
-  /* Slim surface cards — names only */
+  /* Big surface cards — names only */
   .surface-card {
-    padding: 14px 14px;
+    padding: 18px 18px;
     text-align: left;
     align-items: flex-start;
-    max-width: 200px;
-    margin: 0 auto;
     width: 100%;
+    border-radius: 12px;
+    background: white;
+    border: 1.5px solid rgba(15, 23, 42, 0.1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
   }
-  .surface-card .box-title { font-size: 14px; }
-  .venn-cell.right .surface-card { max-width: 180px; }
+  .surface-card .box-title { font-size: 16px; font-weight: 700; }
+  .surface-card.shared {
+    border: 1.5px solid rgba(99, 102, 241, 0.55);
+    background: linear-gradient(135deg, rgba(255,255,255,1), rgba(238, 242, 255, 0.6));
+  }
+  .box-tag.shared { background: rgba(99, 102, 241, 0.18); color: #4338ca; }
   /* Layer 2: 2 graphs */
   .layer-2 .boxes {
     grid-template-columns: 1fr 1fr;
@@ -321,6 +326,7 @@
   </div>
 
   <div class="venn">
+    <div class="shared-bg"></div>
     <div class="product-line india">
       <span class="pl-label">India B2C</span>
     </div>
@@ -329,27 +335,27 @@
     </div>
 
     <div class="venn-grid">
-      <!-- India-only zone -->
+      <!-- Region 1: India only -->
       <div class="venn-cell">
-        <div class="box surface-card">
+        <div class="surface-card">
           <div class="box-title">📱 Parent App</div>
         </div>
       </div>
 
-      <!-- Shared overlap zone -->
+      <!-- Region 2: Shared (intersection) -->
       <div class="venn-cell center">
-        <div class="box surface-card">
+        <div class="surface-card shared">
           <div class="box-title">🎓 Student App</div>
           <span class="box-tag shared">Shared</span>
         </div>
       </div>
 
-      <!-- Indonesia-only zone -->
+      <!-- Region 3: Indonesia only -->
       <div class="venn-cell right">
-        <div class="box surface-card">
+        <div class="surface-card">
           <div class="box-title">📺 Byju's TV</div>
         </div>
-        <div class="box surface-card">
+        <div class="surface-card">
           <div class="box-title">📱 Teacher Portal</div>
         </div>
       </div>
