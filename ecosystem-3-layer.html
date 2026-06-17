@@ -98,10 +98,84 @@
     gap: 10px;
   }
 
-  /* Layer 3: 4 surfaces */
-  .layer-3 .boxes {
-    grid-template-columns: repeat(4, 1fr);
+  /* Layer 3: Venn — India B2C and Indonesia B2G overlap on Student App */
+  .layer-3 .venn {
+    position: relative;
+    padding: 26px 0 12px;
   }
+  /* Two overlapping rounded-rectangle "product line" backgrounds */
+  .product-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    border: 2px solid;
+    border-radius: 22px;
+    pointer-events: none;
+  }
+  .product-line.india {
+    left: 0;
+    right: 38%;
+    background: rgba(29, 78, 216, 0.06);
+    border-color: rgba(29, 78, 216, 0.45);
+    z-index: 1;
+  }
+  .product-line.indonesia {
+    left: 38%;
+    right: 0;
+    background: rgba(13, 148, 136, 0.07);
+    border-color: rgba(13, 148, 136, 0.55);
+    z-index: 1;
+  }
+  .product-line .pl-label {
+    position: absolute;
+    top: -11px;
+    background: white;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .product-line.india .pl-label {
+    left: 18px;
+    color: rgba(29, 78, 216, 1);
+    border: 1.5px solid rgba(29, 78, 216, 0.45);
+  }
+  .product-line.indonesia .pl-label {
+    right: 18px;
+    color: rgba(13, 148, 136, 1);
+    border: 1.5px solid rgba(13, 148, 136, 0.55);
+  }
+
+  /* Card row — three zones */
+  .venn-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.1fr 1.3fr 1.8fr;
+    gap: 12px;
+    padding: 22px 18px;
+  }
+  .venn-cell {
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: 10px;
+  }
+  .venn-cell.right {
+    grid-template-columns: 1fr 1fr;
+  }
+  .venn-cell.center .box {
+    border: 1.5px solid;
+    border-image: linear-gradient(135deg, rgba(29, 78, 216, 0.5), rgba(13, 148, 136, 0.55)) 1;
+    border-radius: 0;
+    background: linear-gradient(135deg, rgba(29, 78, 216, 0.03), rgba(13, 148, 136, 0.04));
+  }
+  .venn-cell.center .box {
+    border-radius: 10px;
+    border: 1.5px solid rgba(99, 102, 241, 0.6);
+  }
+  .box-tag.shared { background: rgba(99, 102, 241, 0.14); color: #4338ca; }
+  .box-tag.indonesia { background: rgba(13, 148, 136, 0.14); color: #0f766e; }
   /* Layer 2: 2 graphs */
   .layer-2 .boxes {
     grid-template-columns: 1fr 1fr;
@@ -226,33 +300,54 @@
 <h1>Product ecosystem — 3-layer architecture</h1>
 <p class="subtitle">Two products on the surface layer sharing one content backbone, addressed by a Universal Knowledge Graph.</p>
 
-<!-- LAYER 3: Surfaces -->
+<!-- LAYER 3: Surfaces (Venn — two product lines, shared Student App) -->
 <div class="layer layer-3">
   <div class="layer-head">
     <span class="layer-tag">Layer 3</span>
     <h2 class="layer-title">Surfaces</h2>
-    <span class="layer-sub">what end users see</span>
+    <span class="layer-sub">two product lines · Student App is shared</span>
   </div>
-  <div class="boxes">
-    <div class="box">
-      <div class="box-title">🎓 Byjus.AI</div>
-      <div class="box-desc">AI tutor, voice-first, MAX + Spark. India B2C + Indonesia Pillar 2 (Bahasa).</div>
-      <span class="box-tag ai">AI path</span>
+
+  <div class="venn">
+    <div class="product-line india">
+      <span class="pl-label">India B2C</span>
     </div>
-    <div class="box">
-      <div class="box-title">📱 Parent App</div>
-      <div class="box-desc">Companion to Byjus.AI. India B2C only.</div>
-      <span class="box-tag ai">AI path</span>
+    <div class="product-line indonesia">
+      <span class="pl-label">Indonesia B2G (CERDAS)</span>
     </div>
-    <div class="box">
-      <div class="box-title">📺 Byju's TV</div>
-      <div class="box-desc">Offline classroom TV. Teacher-driven. CERDAS Pillar 1.</div>
-      <span class="box-tag offline">Offline path</span>
-    </div>
-    <div class="box">
-      <div class="box-title">📱 Teacher Portal</div>
-      <div class="box-desc">Teacher mobile companion to Byju's TV. Same product line.</div>
-      <span class="box-tag offline">Offline path</span>
+
+    <div class="venn-grid">
+      <!-- India-only zone -->
+      <div class="venn-cell">
+        <div class="box">
+          <div class="box-title">📱 Parent App</div>
+          <div class="box-desc">Companion to Student App. India B2C only.</div>
+          <span class="box-tag ai">India only</span>
+        </div>
+      </div>
+
+      <!-- Shared overlap zone -->
+      <div class="venn-cell center">
+        <div class="box">
+          <div class="box-title">🎓 Student App</div>
+          <div class="box-desc">Byjus.AI — AI tutor, voice-first, MAX + Spark. <b>Same product</b> deployed to both markets: India (CBSE / English) + Indonesia (Bahasa, Kurikulum Merdeka).</div>
+          <span class="box-tag shared">Shared</span>
+        </div>
+      </div>
+
+      <!-- Indonesia-only zone -->
+      <div class="venn-cell right">
+        <div class="box">
+          <div class="box-title">📺 Byju's TV</div>
+          <div class="box-desc">Offline classroom TV. Teacher-driven. CERDAS Pillar 1.</div>
+          <span class="box-tag indonesia">Indonesia only</span>
+        </div>
+        <div class="box">
+          <div class="box-title">📱 Teacher Portal</div>
+          <div class="box-desc">Teacher mobile companion to Byju's TV.</div>
+          <span class="box-tag indonesia">Indonesia only</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
