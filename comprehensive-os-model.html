@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ClassRoots — Comprehensive OS Model</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --ink-faint: #94a3b8;
+
+    /* Product core — reuse existing 3-layer palette */
+    --l3-bg: #eff6ff;
+    --l3-border: #93c5fd;
+    --l3-accent: #1d4ed8;
+
+    --l2-bg: #faf5ff;
+    --l2-border: #c4b5fd;
+    --l2-accent: #6d28d9;
+
+    --l1-bg: #fff7ed;
+    --l1-border: #fdba74;
+    --l1-accent: #c2410c;
+
+    /* Business OS — green family */
+    --biz-bg: #f0fdf4;
+    --biz-border: #86efac;
+    --biz-accent: #15803d;
+    --biz-card: #ffffff;
+    --biz-card-border: #bbf7d0;
+
+    /* Platform — slate family */
+    --plat-bg: #f8fafc;
+    --plat-border: #cbd5e1;
+    --plat-accent: #475569;
+    --plat-card: #ffffff;
+    --plat-card-border: #e2e8f0;
+
+    --arrow: #64748b;
+    --arrow-strong: #1e293b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 24px 48px;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin: 0 0 28px;
+  }
+
+  /* Concentric containers — outer to inner */
+  .ring {
+    border-radius: 18px;
+    padding: 14px 18px 18px;
+    margin-bottom: 0;
+    position: relative;
+  }
+  .ring-label {
+    position: absolute;
+    top: 10px;
+    left: 22px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .ring-tagline {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .platform {
+    background: var(--plat-bg);
+    border: 1.5px solid var(--plat-border);
+    padding-top: 36px;
+    padding-bottom: 16px;
+  }
+  .platform .ring-label { color: var(--plat-accent); }
+
+  .business {
+    background: var(--biz-bg);
+    border: 1.5px solid var(--biz-border);
+    padding-top: 36px;
+    margin: 14px 8px;
+  }
+  .business .ring-label { color: var(--biz-accent); }
+
+  .core {
+    background: #ffffff;
+    border: 2px solid #334155;
+    padding-top: 36px;
+    padding-bottom: 18px;
+    margin: 14px 6px;
+    border-radius: 16px;
+  }
+  .core .ring-label { color: #0f172a; }
+
+  /* Platform module grid */
+  .plat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  .plat-section {
+    background: var(--plat-card);
+    border: 1px solid var(--plat-card-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .plat-section h4 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--plat-accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .plat-section .items {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* Business OS grid */
+  .biz-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .biz-card {
+    background: var(--biz-card);
+    border: 1px solid var(--biz-card-border);
+    border-radius: 9px;
+    padding: 9px 11px;
+  }
+  .biz-card .title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--biz-accent);
+    margin-bottom: 2px;
+  }
+  .biz-card .items {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* Core — 3 layer stack */
+  .layer-card {
+    border-radius: 11px;
+    padding: 12px 16px;
+    margin-bottom: 9px;
+    position: relative;
+  }
+  .layer-card:last-child { margin-bottom: 0; }
+  .layer-card .tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .layer-card .title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .layer-card .items {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .l3 { background: var(--l3-bg); border: 1.5px solid var(--l3-border); }
+  .l3 .tag, .l3 .title { color: var(--l3-accent); }
+
+  .l2 { background: var(--l2-bg); border: 1.5px solid var(--l2-border); }
+  .l2 .tag, .l2 .title { color: var(--l2-accent); }
+
+  .l1 { background: var(--l1-bg); border: 1.5px solid var(--l1-border); }
+  .l1 .tag, .l1 .title { color: var(--l1-accent); }
+
+  /* Interconnections legend */
+  .legend {
+    margin-top: 22px;
+    padding: 14px 18px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+  }
+  .legend h3 {
+    margin: 0 0 9px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .flows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 18px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .flows .flow b { color: var(--ink); font-weight: 600; }
+  .flows .arrow {
+    color: var(--arrow-strong);
+    font-weight: 700;
+    margin: 0 4px;
+  }
+
+  .footer {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>ClassRoots — Comprehensive OS Model</h1>
+  <p class="subtitle">Three concentric rings: the product is the brain, the business operates around it, the platform holds everything up. One picture for product, engineering, leadership.</p>
+
+  <!-- OUTER: Platform -->
+  <div class="ring platform">
+    <span class="ring-label">Outer ring · Platform</span>
+    <span class="ring-tagline">the skeleton — everything else stands on this</span>
+
+    <div class="plat-grid">
+      <div class="plat-section">
+        <h4>Foundation</h4>
+        <div class="items">Cloud · CI/CD · Backup &amp; DR · Multi-tenancy · Multi-region</div>
+      </div>
+      <div class="plat-section">
+        <h4>Integration (seam to outside)</h4>
+        <div class="items">Payment rails · Identity/SSO · SIS / LMS / ERP · Comms providers · Learning event bus · Maps / search / LLM APIs</div>
+      </div>
+      <div class="plat-section">
+        <h4>Cross-cutting pillars</h4>
+        <div class="items">Identity &amp; Access · Security &amp; Data Protection · Observability · Data Governance · Audit · Privacy</div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: Business OS -->
+    <div class="ring business">
+      <span class="ring-label">Middle ring · Business OS</span>
+      <span class="ring-tagline">the body — runs the business around the product</span>
+
+      <div class="biz-grid">
+        <div class="biz-card">
+          <div class="title">Go-to-Market</div>
+          <div class="items">Consumer (B2C) · Direct (D2C) · Institutional (B2B / B2G) · Marketplace</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">Sales &amp; Marketing</div>
+          <div class="items">Sales CRM · Marketing &amp; Growth · Lead gen · Lifecycle</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">Money</div>
+          <div class="items">Subscriptions · Payments · Revenue ops · Refunds</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">Compliance</div>
+          <div class="items">Regulation · Data protection · Academic compliance · Tenant residency</div>
+        </div>
+
+        <div class="biz-card">
+          <div class="title">Programme Ops</div>
+          <div class="items">Rollout · Cohorts · Service recovery · CERDAS programme</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">Field &amp; Devices</div>
+          <div class="items">Field ops app · Device management · Hardware logistics · Smart-TV deployment</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">People</div>
+          <div class="items">HR · Talent · Performance · Tutors / facilitators supply</div>
+        </div>
+        <div class="biz-card">
+          <div class="title">Parent &amp; Community</div>
+          <div class="items">Parent comms · Counsellor workspace · Forums · Community</div>
+        </div>
+      </div>
+
+      <!-- INNER: Product core -->
+      <div class="ring core">
+        <span class="ring-label">Inner ring · Product Core (the brain)</span>
+        <span class="ring-tagline">the differentiator</span>
+
+        <div class="layer-card l3">
+          <div class="tag">Layer 3 · Surfaces</div>
+          <div class="title">What learners, teachers, parents, programme staff touch</div>
+          <div class="items">
+            <b>India B2C:</b> Byjus.AI Student App · Parent App<br>
+            <b>Indonesia B2G (CERDAS):</b> Byju's TV (offline classroom) · Teacher Portal · Student App (Bahasa Byjus.AI)
+          </div>
+        </div>
+
+        <div class="layer-card l2">
+          <div class="tag">Layer 2 · Universal Knowledge Graph</div>
+          <div class="title">Canonical concept structure + runtime intelligence + per-student state</div>
+          <div class="items">
+            <b>Engines:</b> Journey orchestration · Mastery / knowledge tracing · Misconception &amp; intervention · Adaptive recommendation · Assessment scoring<br>
+            <b>Entities:</b> Concept / Objective · Learner · Session · Mastery (RAG) · Misconception · Student Memory File · Student KG overlay<br>
+            <b>Internal tools:</b> KG Explorer · Tagging Tool · Journey Composer
+          </div>
+        </div>
+
+        <div class="layer-card l1">
+          <div class="tag">Layer 1 · Content</div>
+          <div class="title">The teachable material — authored once, consumed everywhere</div>
+          <div class="items">
+            <b>Common CMS</b> (SCHOOL-APP-CMS today) · Modules · Spines · Embedded assets (applets, videos) · Keystones · Misconception library<br>
+            <b>Internal tools:</b> Production Pipeline (teams.classroots.edu + CT) · Export Service (online → offline bundles for CERDAS)
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Interconnections -->
+  <div class="legend">
+    <h3>Interconnections — how the rings touch</h3>
+    <div class="flows">
+      <div class="flow"><b>Surfaces</b> <span class="arrow">↔</span> <b>UKG</b> — every learner action reads/writes the UKG (RAG state, mastery, misconceptions) at runtime</div>
+      <div class="flow"><b>Content</b> <span class="arrow">→</span> <b>UKG</b> — authored modules + spines + keystones are tagged into UKG nodes at publish</div>
+      <div class="flow"><b>Business OS</b> <span class="arrow">→</span> <b>Surfaces</b> — Sales/Marketing acquires into Surfaces; Money handles subscription/payment within Surfaces; Programme Ops runs CERDAS rollouts on Byju's TV</div>
+      <div class="flow"><b>Business OS</b> <span class="arrow">→</span> <b>UKG entities</b> — Counsellor/Parent &amp; Community read Learner + Session entities for outreach</div>
+      <div class="flow"><b>Platform integration</b> <span class="arrow">→</span> <b>Business OS</b> — Payment rails feed Money; SSO feeds Identity; SIS/LMS feeds Institutional GTM</div>
+      <div class="flow"><b>Platform pillars</b> <span class="arrow">⤳</span> <b>everything</b> — Identity, Security, Audit, Governance apply across all three rings</div>
+    </div>
+  </div>
+
+  <p class="footer">Comprehensive OS Model · authored 2026-06-17 · supersedes the standalone 3-layer view (which now sits as the Product Core)</p>
+
+</div>
+</body>
+</html>
